@@ -1,0 +1,14 @@
+on:
+  - push
+name: Build project
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: microsoft/setup-msbuild@v1.1
+      - run: msbuild OpenGLFramework-VS2017\OpenGLFramework-VS2017.vcxproj /p:configuration=release /p:platform=x64
+      - uses: actions/upload-artifact@v3
+        with:
+          name: EXE
+          path: OpenGLFramework-VS2017/x64/release/OpenGLFramework-VS2017.exe
