@@ -6,9 +6,15 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.1
-      - run: msbuild OpenGLFramework-VS2017\OpenGLFramework-VS2017.vcxproj /p:configuration=release /p:platform=x64
-      - uses: actions/upload-artifact@v3
         with:
-          name: EXE
-          path: OpenGLFramework-VS2017/x64/release/OpenGLFramework-VS2017.exe
+          submodules: true
+      - uses: microsoft/setup-msbuild@v1.1
+      - run: cmake -G "Visual Studio 17 2022" -A x64 .
+      - run: dir
+      - run: msbuild proj.sln
+      # - uses: microsoft/setup-msbuild@v1.1
+      # - run: msbuild OpenGLFramework-VS2017\OpenGLFramework-VS2017.vcxproj /p:configuration=release /p:platform=x64
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: EXE
+      #     path: OpenGLFramework-VS2017/x64/release/OpenGLFramework-VS2017.exe
