@@ -1,6 +1,7 @@
 on:
   - push
-name: Build project
+
+name: Build Windows
 jobs:
   build:
     runs-on: windows-latest
@@ -9,19 +10,11 @@ jobs:
         with:
           submodules: true
       - uses: microsoft/setup-msbuild@v1.1
-      - run: dir 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Redist\MSVC\14.31.31103\onecore\debug_nonredist\x64\Microsoft.VC143.DebugCRT\'
+
+      - run: cmake -G "Visual Studio 17 2022" -A x64 .
+      - run: msbuild proj.sln
+
       - uses: actions/upload-artifact@v3
         with:
-          name: debug-dlls
-          path: 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Redist\MSVC\14.31.31103\onecore\debug_nonredist\x64\Microsoft.VC143.DebugCRT\*.dll'
-
-      # - run: cmake -G "Visual Studio 17 2022" -A x64 .
-      # - run: dir
-      # - run: msbuild proj.sln
-
-      # - uses: microsoft/setup-msbuild@v1.1
-      # - run: msbuild OpenGLFramework-VS2017\OpenGLFramework-VS2017.vcxproj /p:configuration=release /p:platform=x64
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: EXE
-      #     path: OpenGLFramework-VS2017/x64/release/OpenGLFramework-VS2017.exe
+          name: EXE
+          path: x64/release/proj.exe

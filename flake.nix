@@ -6,30 +6,40 @@
 
   outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        deps = with pkgs; [
+          clang_14
+          gnumake
+          cmake
+          pkg-config
+          glfw3
+          /* llvm_14
+            llvmPackages_14.libstdcxxClang */
+        ];
+        dev-deps = with pkgs; [
+          bear
+          clang-tools
+        ];
       in
       {
-        devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            clang-tools
-            clang_14
-            llvm_14
-            llvmPackages_14.libstdcxxClang
-
-            glfw3
-            pkg-config
-
-            bear
+        defaultPackage = pkgs.stdenv.mkDerivation {
+          src = ./.;
+          name = "cg1";
+          buildInputs = deps;
+        };
+        packages.static = pkgs.pkgsStatic.stdenv.mkDerivation {
+          src = ./.;
+          name = "cg1";
+          buildInputs = with pkgs.pkgsStatic; [
             gnumake
             cmake
-
-            xorg.libX11
-            xorg.libXrandr
-            xorg.libXinerama
-            xorg.libXcursor
-            xorg.libXi
-            xorg.libXext
+            pkg-config
+            glfw3
           ];
+        };
+        devShell = pkgs.mkShell {
+          buildInputs = deps ++ dev-deps;
         };
       });
 }

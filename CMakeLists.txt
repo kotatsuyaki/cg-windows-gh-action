@@ -14,6 +14,11 @@ else()
     target_link_libraries(proj glfw dl)
 endif()
 
+if(NOT WIN32)
+    add_compile_options(-Wall -Wextra)
+    install(TARGETS proj DESTINATION bin)
+endif()
+
 # Export compile commands for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
